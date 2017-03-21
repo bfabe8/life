@@ -5,7 +5,8 @@ pub struct Cell {
 
 #[derive(Debug)]
 pub struct Grid {
-    data: Vec<Vec<Cell>>,
+    data: Vec<Cell>,
+    bounds: (usize, usize)
 }
 
 impl Cell {
@@ -16,7 +17,12 @@ impl Cell {
 
 impl Grid {
     pub fn new(width: usize, height: usize) -> Grid {
-        let dat = vec![vec![Cell::new(); height]; width];
-        Grid { data: dat }
+        let dat = vec![Cell::new(); width * height];
+        Grid { data: dat, bounds: (width, height) }
+    }
+
+    pub fn get(&self, x: usize, y: usize) -> &Cell {
+        let (width, _) = self.bounds;
+        &self.data[y * width + x]
     }
 }
