@@ -1,6 +1,7 @@
 #[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, Copy)]
 pub struct Cell {
-    state: u8,
+    alive: bool,
 }
 
 #[derive(Debug)]
