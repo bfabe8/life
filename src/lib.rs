@@ -63,22 +63,44 @@ impl Grid {
     }
 }
 
-fn get_neighbors(idx: usize, width: usize, height: usize) -> [Option<usize>; 4] {
-    let mut arr = [None; 4];
+fn get_neighbors(idx: usize, width: usize, height: usize) -> [Option<usize>; 8] {
+    let mut arr = [None; 8];
 
-    if idx >= width {
+    let bottom = || idx >= (width * (height - 1));
+    let top = || idx < width;
+    let left = || idx % width == 0;
+    let right = || idx % (width - 1) == 0;
+    let top_left = || top() || left();
+    let top_right = || top() || right();
+    let bottom_left = || bottom() || left();
+    let bottom_right = || bottom() || right();
+
+    if !bottom() {
         arr[0] = Some(idx - width);
     }
-    if idx < (width * (height - 1)) {
+    if !top() {
         arr[1] = Some(idx + width);
     }
-    if idx % width != 0 {
+    if !left() {
         arr[2] = Some(idx - 1);
     }
-    if idx % (width - 1) != 0 {
+    if !right() {
         arr[3] = Some(idx + 1);
+    }
+    if !top_left() {
+        arr[4] = Some(idx + width - 1);
+    }
+    if !top_right() {
+        arr[5] = Some(idx + width + 1);
+    }
+    if !bottom_left() {
+        arr[6] = Some(idx - width - 1);
+    }
+    if !bottom_right() {
+        arr[7] = Some(idx - width + 1);
     }
 
     arr
 }
+
 
