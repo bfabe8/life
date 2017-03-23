@@ -1,6 +1,6 @@
 use std::fmt;
 
-type Pos = (usize, usize);
+pub type Vec2 = (usize, usize);
 
 #[derive(Debug, Clone, Copy)]
 pub struct Cell {
@@ -10,7 +10,7 @@ pub struct Cell {
 #[derive(Debug)]
 pub struct Grid {
     data: Vec<Cell>,
-    bounds: (usize, usize),
+    bounds: Vec2,
 }
 
 impl Cell {
@@ -58,7 +58,7 @@ impl Default for Cell {
 }
 
 impl Grid {
-    pub fn new((width, height): Pos) -> Grid {
+    pub fn new((width, height): Vec2) -> Grid {
         let data = vec![Cell::new(); width * height];
         Grid {
             data: data,
@@ -66,7 +66,7 @@ impl Grid {
         }
     }
 
-    pub fn with_data(data: Vec<bool>, bounds: Pos) -> Grid {
+    pub fn with_data(data: Vec<bool>, bounds: Vec2) -> Grid {
         let (width, height) = bounds;
         assert_eq!(data.len(), width * height);
 
@@ -77,7 +77,7 @@ impl Grid {
         }
     }
 
-    pub fn get(&self, pos: Pos) -> &Cell {
+    pub fn get(&self, pos: Vec2) -> &Cell {
         let (width, _) = self.bounds;
         &self.data[pos_to_idx(pos, width)]
     }
@@ -113,17 +113,17 @@ impl fmt::Display for Grid {
 }
 
 
-fn idx_to_pos(idx: usize, width: usize) -> Pos {
+fn idx_to_pos(idx: usize, width: usize) -> Vec2 {
     let y = idx / width;
     let x = idx - y * width;
     (x, y)
 }
 
-fn pos_to_idx((x, y): Pos, width: usize) -> usize {
+fn pos_to_idx((x, y): Vec2, width: usize) -> usize {
     y * width + x
 }
 
-fn get_neighbors((x, y): Pos, (width, height): Pos) -> Vec<Option<Pos>> {
+fn get_neighbors((x, y): Vec2, (width, height): Vec2) -> Vec<Option<Vec2>> {
     let mut arr = Vec::with_capacity(8);
 
     let bottom = y != 0;
