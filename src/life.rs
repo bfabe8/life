@@ -22,11 +22,8 @@ impl Cell {
         Cell { alive: val }
     }
 
-    fn update(&mut self, neighbors: &[Option<Cell>]) {
-        let count = neighbors.into_iter().fold(0, |acc, &op| match op {
-            Some(c) if c.is_alive() => acc + 1,
-            _ => acc,
-        });
+    fn update(&mut self, neighbors: &[Cell]) {
+        let count = neighbors.into_iter().filter(|n| n.is_alive()).count();
 
         self.alive = match (self.alive, count) {
             (true, 2) | (true, 3) | (false, 3) => true,
@@ -70,7 +67,7 @@ impl Grid {
         let (width, height) = bounds;
         assert_eq!(data.len(), width * height);
 
-        let data = data.into_iter().map(From::from).collect();
+        let data = data.iter().map(|&b| Cell::from(b)).collect();
         Grid {
             data: data,
             bounds: bounds,
@@ -90,9 +87,9 @@ impl Grid {
         for idx in 0..self.data.len() {
             let mut cell = &mut self.data[idx];
 
-            let neighbors: Vec<Option<Cell>> = get_neighbors(idx_to_pos(idx, width), self.bounds)
-                .into_iter()
-                .map(|op| op.map(|pos| curstate[pos_to_idx(pos, width)]))
+            let neighbors: Vec<Cell> = get_neighbors(idx_to_pos(idx, width), self.bounds)
+                .iter()
+                .filter_map(|op| op.map(|pos| curstate[pos_to_idx(pos, width)]))
                 .collect();
 
             cell.update(&neighbors);
@@ -162,3 +159,4 @@ fn get_neighbors((x, y): Vec2, (width, height): Vec2) -> Vec<Option<Vec2>> {
 
     arr
 }
+
