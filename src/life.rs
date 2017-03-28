@@ -2,12 +2,12 @@ use std::fmt;
 
 pub type Vec2 = (usize, usize);
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Cell {
     alive: bool,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct Grid {
     data: Vec<Cell>,
     bounds: Vec2,
@@ -159,4 +159,3 @@ fn get_neighbors((x, y): Vec2, (width, height): Vec2) -> Vec<Option<Vec2>> {
 
     arr
 }
-
